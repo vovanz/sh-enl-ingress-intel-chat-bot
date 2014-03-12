@@ -1,4 +1,4 @@
-storage = require('../../lib/storage.js')('plugin.welcome')
+storage = require(LIB_DIR + '/storage.js')('plugin.welcome')
 
 plugin = 
 
@@ -35,7 +35,7 @@ plugin =
 
     sayHelloJoke: (player) ->
 
-        FactionUtil.send Bot.getTemplate(Config.Faction.WelcomeJokeTemplates).fillPlayer(player).fillSmily().toString()
+        FactionUtil.send Bot.getTemplate(Config.Faction.Plugin.Welcome.JokeTemplates).fillPlayer(player).fillSmily().toString()
 
     sayHello: (player) ->
 
@@ -43,6 +43,6 @@ plugin =
         storage.welcomedAgents[player.toLowerCase()] = true
         storage.save()
 
-        FactionUtil.send Bot.getTemplate(Config.Faction.WelcomeJokeTemplates).fillPlayer(player).fillSmily().toString()
+        FactionUtil.send Bot.getTemplate(Config.Faction.Plugin.Welcome.JokeTemplates).fillPlayer(player).fillSmily().toString()
 
 module.exports = plugin

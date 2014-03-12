@@ -20,10 +20,10 @@ getCSV = (file) ->
 
     result
 
-_provinces = getCSV __dirname + '/../../../res/province.csv'
+_provinces = getCSV ROOT_DIR + '/res/province.csv'
 _provinceId2P = {}
 _provinceId2P[p[0]] = p for p in _provinces
-_cities = getCSV __dirname + '/../../../res/city.csv'
+_cities = getCSV ROOT_DIR + '/res/city.csv'
 cities = []
 for c in _cities
 

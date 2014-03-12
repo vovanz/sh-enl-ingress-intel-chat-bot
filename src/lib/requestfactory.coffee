@@ -1,4 +1,4 @@
-delayedQueue = require './delayedqueue.js'
+delayedQueue = require LIB_DIR + '/delayedqueue.js'
 zlib = require 'zlib'
 async = require 'async'
 request = require 'request'

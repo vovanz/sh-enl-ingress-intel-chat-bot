@@ -1,5 +1,5 @@
 async = require 'async'
-requestFactory = require './requestfactory.js'
+requestFactory = require LIB_DIR + '/requestfactory.js'
 request = requestFactory()
 
 AccountInfo = GLOBAL.AccountInfo = 

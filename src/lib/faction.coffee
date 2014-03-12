@@ -1,12 +1,12 @@
 async = require 'async'
 
-requestFactory = require './requestfactory.js'
+requestFactory = require LIB_DIR + '/requestfactory.js'
 request = requestFactory()
 
-storage = require('./storage.js')('faction')
+storage = require(LIB_DIR + '/storage.js')('faction')
 
 plugins = require('require-all')
-    dirname: __dirname + '/../plugins/faction'
+    dirname: PLUGINS_DIR + '/faction'
     filter : /(.+)\.js$/,
 
 pluginList = []

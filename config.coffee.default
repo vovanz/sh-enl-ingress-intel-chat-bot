@@ -38,94 +38,96 @@ Config = GLOBAL.Config =
         FetchInterval: 30 * 1000
         MaxTimeout:    60 * 1000
         MaxParseTimespan: 10 * 24 * 60 * 60 * 1000
-        WelcomeJokeTemplates: [
-            [
-                ''
-                'Hey! '
-            ]
-            ['@{player} ']
-            [
-                '{smily:掀桌}'
-                '{smily:bye}'
-                '{smily:evil}'
-                '{smily:throw}'
-                '{smily:afraid}'
-            ]
-        ]
-        WelcomeTemplates: [
-            [
-                ''
-                ''
-                ''
-                ''
-                '{smily:smile} '
-                '{smily:evil} '
-                '{smily:shy} '
-                '{smily:sing} '
-                '{smily:blink} '
-            ]
-            [
-                'Hello @{player}, '
-                '@{player} '
-                '@{player} Hello agent, '
-            ]
-            ['欢迎加入']
-            [
-                ''
-                '魔都'
-                '上海'
-            ]
-            [
-                '启示军'
-                '天启军'
-            ]
-            ['！']
-            [
-                ''
-                ''
-                ''
-                '请加'
-            ]
-            ['QQ群：287575595']
-            [
-                ''
-                '，提供游戏辅导/装备支援/基友发放'
-                '，提供游戏辅导/装备支援/妹纸发放'
-                '，可提供各种装备'
-                '，送装备送妹子送节操'
-            ]
-            [' / ']
-            ['Welcome to ']
-            [
-                'Shanghai Enlightened'
-                'Shanghai ENL'
-            ]
-            ['! Search [Shanghai Enlightened] in ']
-            [
-                'Google+'
-                'G+'
-                'g+'
-            ]
-            [' ']
-            [
-                'to get help & support'
-                'to get help and support'
-                'to get help'
-                'for help'
-                'for support'
-                'for help and support'
-                'for help & support'
-            ]
-            ['.']
-            [
-                ''
-                ' Good game!'
-                ' Have fun gaming!'
-            ]
-        ]
         Center:
             Lat: 31.285748590482566
             Lng: 121.49637579917909
+        Plugin:
+            Welcome:
+                JokeTemplates: [
+                    [
+                        ''
+                        'Hey! '
+                    ]
+                    ['@{player} ']
+                    [
+                        '{smily:掀桌}'
+                        '{smily:bye}'
+                        '{smily:evil}'
+                        '{smily:throw}'
+                        '{smily:afraid}'
+                    ]
+                ]
+                Templates: [
+                    [
+                        ''
+                        ''
+                        ''
+                        ''
+                        '{smily:smile} '
+                        '{smily:evil} '
+                        '{smily:shy} '
+                        '{smily:sing} '
+                        '{smily:blink} '
+                    ]
+                    [
+                        'Hello @{player}, '
+                        '@{player} '
+                        '@{player} Hello agent, '
+                    ]
+                    ['欢迎加入']
+                    [
+                        ''
+                        '魔都'
+                        '上海'
+                    ]
+                    [
+                        '启示军'
+                        '天启军'
+                    ]
+                    ['！']
+                    [
+                        ''
+                        ''
+                        ''
+                        '请加'
+                    ]
+                    ['QQ群：287575595']
+                    [
+                        ''
+                        '，提供游戏辅导/装备支援/基友发放'
+                        '，提供游戏辅导/装备支援/妹纸发放'
+                        '，可提供各种装备'
+                        '，送装备送妹子送节操'
+                    ]
+                    [' / ']
+                    ['Welcome to ']
+                    [
+                        'Shanghai Enlightened'
+                        'Shanghai ENL'
+                    ]
+                    ['! Search [Shanghai Enlightened] in ']
+                    [
+                        'Google+'
+                        'G+'
+                        'g+'
+                    ]
+                    [' ']
+                    [
+                        'to get help & support'
+                        'to get help and support'
+                        'to get help'
+                        'for help'
+                        'for support'
+                        'for help and support'
+                        'for help & support'
+                    ]
+                    ['.']
+                    [
+                        ''
+                        ' Good game!'
+                        ' Have fun gaming!'
+                    ]
+                ]
 
     Database:
 
