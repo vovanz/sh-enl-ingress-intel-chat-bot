@@ -1,0 +1,18 @@
+{
+    "name": "iitc-bot",
+    "version": "0.0.1",
+    "dependencies": {
+        "grunt": "*",
+        "grunt-contrib-coffee": "*",
+        "grunt-contrib-watch": "*",
+        "grunt-contrib-copy": "*",
+        "request": "*",
+        "async": "*",
+        "mongoskin": "*",
+        "winston": "*",
+        "require-all": "*",
+        "underscore": "*",
+        "cheerio": "*",
+        "o3o": "*"
+    }
+}
