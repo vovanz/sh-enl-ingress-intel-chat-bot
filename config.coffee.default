@@ -131,7 +131,7 @@ Config = GLOBAL.Config =
 
     Database:
 
-        ConnectString: 'localhost:27017/ingress?auto_reconnect'
+        ConnectString: 'mongodb://localhost:27017/ingress'
 
         MaxParallel:    10
         
