@@ -4,7 +4,7 @@ exec = require('child_process').exec
 path = require 'path'
 fs = require 'fs'
 
-exporterBaseDir = fs.realpathSync '../ingress-exporter'
+exporterBaseDir = fs.realpathSync 'ingress-exporter'
 
 class FormatableTemplate
 
