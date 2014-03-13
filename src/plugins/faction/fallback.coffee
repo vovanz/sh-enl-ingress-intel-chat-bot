@@ -11,7 +11,7 @@ plugin =
         r = FactionUtil.parseCallingBody item
         
         FactionUtil.send Bot.getTemplate([
-            ['@{player}'],
+            ['@{player} '],
             [
                 '呵呵'
                 '嗯?'
