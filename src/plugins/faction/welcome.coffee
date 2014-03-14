@@ -43,6 +43,6 @@ plugin =
         storage.welcomedAgents[player.toLowerCase()] = true
         storage.save()
 
-        FactionUtil.send Bot.getTemplate(Config.Faction.Plugin.Welcome.JokeTemplates).fillPlayer(player).fillSmily().toString()
+        FactionUtil.send Bot.getTemplate(Config.Faction.Plugin.Welcome.Templates).fillPlayer(player).fillSmily().toString()
 
 module.exports = plugin
