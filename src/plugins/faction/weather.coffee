@@ -156,6 +156,10 @@ plugin =
         r = FactionUtil.parseCallingBody item
         city = plugin.parseRequestCity r.body
 
+        if argv.debug
+            FactionUtil.send Bot.generateTemplate('@{player} ## weather of {city} ##').fillPlayer(r.player).fill({city: city}).toString()
+            return
+
         plugin.getWeather city, (err, weather) ->
 
             if err

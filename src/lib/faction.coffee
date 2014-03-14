@@ -20,6 +20,11 @@ FactionListener = GLOBAL.FactionListener =
             lastParsedGuid: null
             lastParsedTime: null
         , ->
+
+            if argv.debug
+                storage.lastParsedGuid = null
+                storage.lastParsedTime = null
+
             async.eachSeries pluginList, (plugin, callback) ->
                 if plugin.init?
                     plugin.init callback
@@ -67,7 +72,7 @@ parseData = (callback) ->
             
             storage.lastParsedTime = item.time
             storage.lastParsedGuid = item._id
-            storage.save()
+            storage.save() if not argv.debug
 
             # call test() on all plugins
             tests = []
@@ -91,6 +96,8 @@ parseData = (callback) ->
                             plugin:   plugin
 
             return next() if tests.length is 0
+
+            logger.info "[Get] #{item.text}"
 
             # sort by priority DESC
             tests.sort (a, b) ->
@@ -136,10 +143,9 @@ FactionUtil = GLOBAL.FactionUtil =
 
     send: (message, completeCallback) ->
 
-        # DEBUG
-        #console.log 'send: %s', message
-        #completeCallback && completeCallback()
-        #return
+        if argv.debug
+            logger.info "[SendMessage] #{message}"
+            return completeCallback && completeCallback()
 
         lat = Config.Faction.Center.Lat + Math.random() * 0.2 - 0.1
         lng = Config.Faction.Center.Lng + Math.random() * 0.2 - 0.1

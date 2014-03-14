@@ -7,6 +7,7 @@
         "grunt-contrib-watch": "*",
         "grunt-contrib-copy": "*",
         "request": "*",
+        "optimist": "*",
         "async": "*",
         "mongoskin": "*",
         "winston": "*",

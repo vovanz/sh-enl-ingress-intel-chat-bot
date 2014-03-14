@@ -2,6 +2,7 @@ GLOBAL.ROOT_DIR = __dirname + '/..'
 GLOBAL.APP_DIR = ROOT_DIR + '/build'
 GLOBAL.LIB_DIR = APP_DIR + '/lib'
 GLOBAL.PLUGINS_DIR = APP_DIR + '/plugins'
+GLOBAL.argv = require('optimist').argv
 
 logger = GLOBAL.logger = require 'winston'
 logger.exitOnError = false
