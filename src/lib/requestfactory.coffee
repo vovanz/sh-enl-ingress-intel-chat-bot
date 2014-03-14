@@ -167,14 +167,17 @@ class RequestFactory
         if typeof body is 'string'
 
             if body.indexOf('CSRF verification failed. Request aborted.') > -1
+                logger.error '[ERROR] CSRF verification failed'
                 return new Error 'CSRF verification failed'
 
             if body.indexOf('User not authenticated') > -1
+                logger.error '[ERROR] User not authenticated'
                 return new Error 'Auth failed'
 
             if body.indexOf('but your computer or network may be sending automated queries') > -1
+                logger.error '[ERROR] Request rejected'
                 return new Error 'request rejected'
-
+                
             return new Error 'unknown server response'
 
         return null
