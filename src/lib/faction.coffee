@@ -97,8 +97,6 @@ parseData = (callback) ->
 
             return next() if tests.length is 0
 
-            logger.info "[Get] #{item.text}"
-
             # sort by priority DESC
             tests.sort (a, b) ->
                 b.priority - a.priority
@@ -141,10 +139,11 @@ FactionUtil = GLOBAL.FactionUtil =
         body:   str
         player: player
 
-    send: (message, completeCallback) ->
+    send: (received, message, completeCallback) ->
 
         if argv.debug
-            logger.info "[SendMessage] #{message}"
+            logger.info "[Get] #{received}"
+            logger.info "[Send] #{message}"
             return completeCallback && completeCallback()
 
         lat = Config.Faction.Center.Lat + Math.random() * 0.2 - 0.1
@@ -162,7 +161,7 @@ FactionUtil = GLOBAL.FactionUtil =
             data:   data
             onError: (err, callback) ->
 
-                logger.error "[SendMessage] Failed to send: #{err.message}"
+                logger.error "[Send] Failed to send: #{err.message}"
                 callback()
 
             afterResponse: (callback) ->
@@ -172,7 +171,8 @@ FactionUtil = GLOBAL.FactionUtil =
                 else
                     thMsg = data.message
 
-                logger.info "[SendMessage] Sent: #{thMsg}"
+                logger.info "[Get] #{received}"
+                logger.info "[Send] #{thMsg}"
 
                 callback()
                 completeCallback && completeCallback()

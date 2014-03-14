@@ -23,26 +23,26 @@ plugin =
             player = item.markup.SENDER1.plain
             player = player.substr 0, player.length - 2
             if storage.welcomedAgents[player.toLowerCase()]?
-                plugin.sayHelloJoke player
+                plugin.sayHelloJoke item, player
             else
-                plugin.sayHello player
+                plugin.sayHello item, player
 
         else
 
-            plugin.sayHello item.markup.PLAYER1.plain
+            plugin.sayHello item, item.markup.PLAYER1.plain
 
         callback()
 
-    sayHelloJoke: (player) ->
+    sayHelloJoke: (item, player) ->
 
-        FactionUtil.send Bot.getTemplate(Config.Faction.Plugin.Welcome.JokeTemplates).fillPlayer(player).fillSmily().toString()
+        FactionUtil.send item.text, Bot.getTemplate(Config.Faction.Plugin.Welcome.JokeTemplates).fillPlayer(player).fillSmily().toString()
 
-    sayHello: (player) ->
+    sayHello: (item, player) ->
 
         return if storage.welcomedAgents[player.toLowerCase()]?
         storage.welcomedAgents[player.toLowerCase()] = true
         storage.save()
 
-        FactionUtil.send Bot.getTemplate(Config.Faction.Plugin.Welcome.Templates).fillPlayer(player).fillSmily().toString()
+        FactionUtil.send item.text, Bot.getTemplate(Config.Faction.Plugin.Welcome.Templates).fillPlayer(player).fillSmily().toString()
 
 module.exports = plugin
