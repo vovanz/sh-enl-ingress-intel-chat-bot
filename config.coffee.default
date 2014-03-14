@@ -58,6 +58,7 @@ Config = GLOBAL.Config =
                     ]
                 ]
                 Templates: [
+                    ['【多哥欢迎你！】']
                     [
                         ''
                         ''
