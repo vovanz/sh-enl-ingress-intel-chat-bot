@@ -48,11 +48,11 @@ plugin =
                 [
                     '呵呵'
                     '嗯?'
-                    '{smily:surprise}'
+                    #'{smily:surprise}'
                 ]
             ]
 
-        FactionUtil.send item.text, Bot.getTemplate(template).fillPlayer(r.player).fillSmily().toString()
+        FactionUtil.send Bot.getTemplate(template).fillPlayer(r.player).fillSmily().toString(), r.body
 
         callback()
 

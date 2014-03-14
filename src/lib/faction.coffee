@@ -128,6 +128,7 @@ FactionUtil = GLOBAL.FactionUtil =
     parseCallingBody: (item) ->
 
         str = item.text
+        str = str.replace(/^\[secure\][\s\S]*?:/, '');
         str = str.replace(/@shanghaienlbot\d*/gi, '');
         str = str.replace(/#bot/g, '');
         str = str.trim()
@@ -139,12 +140,13 @@ FactionUtil = GLOBAL.FactionUtil =
         body:   str
         player: player
 
-    send: (received, message, completeCallback) ->
+    send: (message, received) ->
 
         if argv.debug
-            logger.info "[Get] #{received}"
-            logger.info "[Send] #{message}"
-            return completeCallback && completeCallback()
+            logger.info "[Get] #{received}" if received?
+            logger.info "    > #{message}"
+            return
+            #return completeCallback && completeCallback()
 
         lat = Config.Faction.Center.Lat + Math.random() * 0.2 - 0.1
         lng = Config.Faction.Center.Lng + Math.random() * 0.2 - 0.1
@@ -171,8 +173,8 @@ FactionUtil = GLOBAL.FactionUtil =
                 else
                     thMsg = data.message
 
-                logger.info "[Get] #{received}"
+                logger.info "[Get] #{received}" if received?
                 logger.info "[Send] #{thMsg}"
 
                 callback()
-                completeCallback && completeCallback()
+                #completeCallback && completeCallback()
