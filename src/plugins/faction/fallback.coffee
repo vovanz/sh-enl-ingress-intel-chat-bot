@@ -41,6 +41,20 @@ plugin =
                 ]
             ]
 
+        else if /笨|不聪明/.test r.body
+
+            template = [
+                ['@{player} ']
+                ['{smily:sad}']
+            ]
+
+        else if /(吗|嘛|么)/.test r.body
+
+            template = [
+                ['@{player} ']
+                ['{smily:surprise}']
+            ]
+
         else
 
             template = [
