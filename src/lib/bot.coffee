@@ -50,7 +50,7 @@ Bot = GLOBAL.Bot =
     
     exec: (parameters, timeout, callback) ->
 
-        exec 'node ' + path.join(exporterBaseDir, 'build/app.js') + ' --mungedetect false --playerdetect false ' + parameters,
+        exec 'node ' + path.join(exporterBaseDir, 'build/app.js') + ' --mungedetect false --playerdetect false --cookie ' + JSON.stringify(Config.Auth.CookieRaw) + ' ' + parameters,
             cwd:     exporterBaseDir
             timeout: timeout
         , callback
