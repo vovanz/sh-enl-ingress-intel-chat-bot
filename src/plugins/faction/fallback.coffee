@@ -20,13 +20,23 @@ plugin =
                 ]
             ]
 
-        else if /卖.*?萌/.test r.body
+        else if /(萌|乖)/.test r.body
 
             template = [
                 ['@{player} ']
                 [
                     '{smily:happy}'
                     '{smily:喵}'
+                    '{smily:shy}'
+                ]
+            ]
+
+        else if /(好|真)(屌|叼|吊|厉害)/.test r.body
+
+            template = [
+                ['@{player} 那当然~ ']
+                [
+                    '{smily:happy}'
                     '{smily:shy}'
                 ]
             ]
