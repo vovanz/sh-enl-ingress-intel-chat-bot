@@ -6,7 +6,12 @@ plugin =
 
         storage.fetch
             welcomedAgents: {}
-        , callback
+        , ->
+
+            if argv.debug
+                storage.welcomedAgents = {}
+
+            callback()
 
     test: (item) ->
 
