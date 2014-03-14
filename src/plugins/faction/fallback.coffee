@@ -10,7 +10,17 @@ plugin =
 
         r = FactionUtil.parseCallingBody item
 
-        if /(不要|禁止|不许|别)再?卖萌/.test r.body
+        if /^来?卖个?萌吧?$/.test r.body
+
+            template = [
+                ['@{player} 才不卖萌 ']
+                [
+                    '{smily:喵}'
+                    '{smily:shy}'
+                ]
+            ]
+
+        else if /(不要|禁止|不许|别)再?卖萌/.test r.body
 
             template = [
                 ['@{player} 哼 ']
@@ -48,11 +58,11 @@ plugin =
                 ['{smily:sad}']
             ]
 
-        else if /(吗|嘛|么)/.test r.body
+        else if /(吗|么|了没)/.test r.body
 
             template = [
                 ['@{player} ']
-                ['{smily:surprise}']
+                ['不知道 {smily:surprise}']
             ]
 
         else
