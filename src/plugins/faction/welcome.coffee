@@ -41,7 +41,7 @@ plugin =
 
         return if storage.welcomedAgents[player.toLowerCase()]?
         storage.welcomedAgents[player.toLowerCase()] = true
-        storage.save()
+        storage.save() if not argv.debug
 
         FactionUtil.send item.text, Bot.getTemplate(Config.Faction.Plugin.Welcome.Templates).fillPlayer(player).fillSmily().toString()
 
