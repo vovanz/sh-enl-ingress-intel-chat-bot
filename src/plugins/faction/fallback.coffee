@@ -14,7 +14,10 @@ plugin =
 
             template = [
                 ['@{player} 哼 ']
-                ['{smily:掀桌}']
+                [
+                    '{smily:掀桌}'
+                    '{smily:angry}'
+                ]
             ]
 
         else if /卖.*?萌/.test r.body
