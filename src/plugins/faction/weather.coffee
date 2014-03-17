@@ -88,12 +88,11 @@ plugin =
                 maxFactor = f
                 maxFactorName = city.reqName
 
-        if maxFactorName is null
-            throw new Error 'Cannot parse cities'
-
         return maxFactorName
 
     getWeather: (cityCode, callback) ->
+
+        return callback 'Invalid city code' if cityCode is null
 
         async.waterfall [
 
