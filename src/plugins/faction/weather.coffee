@@ -76,7 +76,7 @@ plugin =
         escapedBody = escapedBody.replace /(天气|tianqi|weather)/g, ''
 
         maxFactor = 0
-        maxFactorName = '上海'
+        maxFactorName = null
 
         # 计算命中最高的城市
         for city in cities
@@ -87,6 +87,9 @@ plugin =
             if f > maxFactor
                 maxFactor = f
                 maxFactorName = city.reqName
+
+        if maxFactorName is null
+            throw new Error 'Cannot parse cities'
 
         return maxFactorName
 
