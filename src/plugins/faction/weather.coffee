@@ -2,6 +2,9 @@ _ = require 'underscore'
 request = require 'request'
 async = require 'async'
 cheerio = require 'cheerio'
+cache = require 'lru-cache'
+    max:    500
+    maxAge: 30 * 60 * 1000
 
 # preprocess data
 
@@ -94,6 +97,9 @@ plugin =
 
         return callback 'Invalid city code' if cityCode is null
 
+        w = cache.get cityCode
+        return callback null, w if w?
+
         async.waterfall [
 
             (callback) ->
@@ -149,6 +155,8 @@ plugin =
                         grade:   $d.attr 'aqigrade'
                         pubtime: new Date($d.attr 'ptime')
                 
+                cache.set cityCode, weather
+
                 callback null, weather
 
         ], callback

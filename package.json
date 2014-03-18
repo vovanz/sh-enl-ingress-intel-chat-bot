@@ -14,6 +14,7 @@
         "require-all": "*",
         "underscore": "*",
         "cheerio": "*",
-        "o3o": "*"
+        "o3o": "*",
+        "lru-cache": "*"
     }
 }
