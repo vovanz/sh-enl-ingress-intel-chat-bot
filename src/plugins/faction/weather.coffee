@@ -2,7 +2,8 @@ _ = require 'underscore'
 request = require 'request'
 async = require 'async'
 cheerio = require 'cheerio'
-cache = require 'lru-cache'
+lru = require 'lru-cache'
+cache = lru
     max:    500
     maxAge: 30 * 60 * 1000
 
