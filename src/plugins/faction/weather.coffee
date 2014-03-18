@@ -8,6 +8,16 @@ cache = require 'lru-cache'
 
 # preprocess data
 
+alterCitycodes =
+    '魔都': '上海'
+    '帝都': '北京'
+    '哏都': '天津'
+    '妖都': '广州'
+    '霸都': '合肥'
+    '神都': '洛阳'
+    '小魔都': '南京'
+    '旧都': '南京'
+
 getCSV = (file) ->
 
     fs = require 'fs'
@@ -90,6 +100,13 @@ plugin =
             if f > maxFactor
                 maxFactor = f
                 maxFactorName = city.reqName
+
+        # 检查别名
+        if maxFactorName is null
+            for alterCityname, realCityname of alterCitycodes
+                if escapedBody.indexOf(alterCityname) > -1
+                    maxFactorName = realCityname
+                    break
 
         return maxFactorName
 
