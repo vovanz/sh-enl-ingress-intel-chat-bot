@@ -8,7 +8,7 @@ logger = GLOBAL.logger = require 'winston'
 logger.exitOnError = false
 logger.remove logger.transports.Console
 logger.add logger.transports.Console,
-    colorize:   true
+    colorize:   process.stdout.isTTY
     timestamp:  true
 logger.add logger.transports.File,
     filename:   ROOT_DIR + '/bot.log'
