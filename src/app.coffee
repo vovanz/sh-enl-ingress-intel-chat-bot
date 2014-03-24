@@ -32,6 +32,10 @@ async.series [
 
     (callback) ->
 
+        Bot.init callback
+
+    , (callback) ->
+
         # raise error here
         logger.info '[MungeDetector] Detecting munge set...'
         MungeDetector.detect callback
@@ -51,11 +55,15 @@ async.series [
 
     , (callback) ->
 
-        logger.info '[Bot] started'
+        logger.info '[Bot] Background process started.'
         MungeDetector.start()
         PublicListener.start()
         FactionListener.start()
         callback()
+
+    , (callback) ->
+
+        Bot.Server.start callback
 
 ], (err) ->
 

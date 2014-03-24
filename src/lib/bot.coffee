@@ -4,7 +4,19 @@ exec = require('child_process').exec
 path = require 'path'
 fs = require 'fs'
 
+express = require 'express'
+app = express()
+
+async = require 'async'
+
 exporterBaseDir = ROOT_DIR + '/ingress-exporter'
+
+serverPlugins = require('require-all')
+    dirname: PLUGINS_DIR + '/server'
+    filter : /(.+)\.js$/,
+
+serverPluginList = []
+serverPluginList.push plugin for pname, plugin of serverPlugins
 
 class FormatableTemplate
 
@@ -47,6 +59,32 @@ class FormatableTemplate
         @value
 
 Bot = GLOBAL.Bot =
+    
+    Server:
+
+        app: app
+
+        start: (callback) ->
+
+            app.listen Config.Server.Port, ->
+
+                logger.info '[Server] Started @ port %d', Config.Server.Port
+                callback()
+
+        init: (callback) ->
+
+            async.eachSeries serverPluginList, (plugin, callback) ->
+                if plugin.init?
+                    plugin.init callback
+                else
+                    callback()
+            , callback
+
+    init: (callback) ->
+
+        async.series [
+            Bot.Server.init
+        ], callback
     
     exec: (parameters, timeout, callback) ->
 
