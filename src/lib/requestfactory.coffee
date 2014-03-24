@@ -48,10 +48,10 @@ class RequestFactory
                 @post '/r/' + task.m, task.d, (error, response, body) =>
 
                     if error
-                        console.log error.stack
+                        logger.error error.stack
 
                     if task.emitted?
-                        console.warn '[DEBUG] Ignored reemitted event'
+                        logger.warn '[DEBUG] Ignored reemitted event (Please report this in issue tracker)'
                         return
 
                     task.emitted = true

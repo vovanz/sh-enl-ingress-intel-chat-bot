@@ -67,11 +67,14 @@ MungeDetector = GLOBAL.MungeDetector =
                         callback 'done'
                         return
 
+                    logger.warn '[MungeDetector] Failed.'
                     callback()
 
             , (callback) ->
 
                 # 2. extract munge data from Ingress.com/intel
+
+                logger.info '[MungeDetector] Trying to extract munge data from ingress.com/intel.'
 
                 extractMunge (err) ->
 
@@ -79,6 +82,7 @@ MungeDetector = GLOBAL.MungeDetector =
                         callback 'new'
                         return
 
+                    logger.warn '[MungeDetector] Failed.'
                     callback()
 
             , (callback) ->
@@ -92,7 +96,6 @@ MungeDetector = GLOBAL.MungeDetector =
             if err is 'done' or err is 'new'
                 
                 Munges.Failed = false
-                logger.info '[MungeDetector] OK'
 
                 if err is 'new'
 
@@ -142,7 +145,7 @@ tryMungeSet = (tryCallback) ->
                 tryCallback && tryCallback()
 
         onError: (err, callback) ->
-            
+
             callback()
             tryCallback && tryCallback err
 
