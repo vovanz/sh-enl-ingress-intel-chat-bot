@@ -1,4 +1,8 @@
 Config = GLOBAL.Config =
+    
+    Server:
+
+        Port: 21474
 
     Auth:
 
@@ -35,8 +39,10 @@ Config = GLOBAL.Config =
 
     Faction:
 
-        FetchInterval: 30 * 1000
-        MaxTimeout:    60 * 1000
+        FetchInterval:    30 * 1000
+        MaxTimeout:       60 * 1000
+        TraceDays:        10
+        TraceDaysDebug:   2
         MaxParseTimespan: 10 * 24 * 60 * 60 * 1000
         Center:
             Lat: 31.285748590482566
