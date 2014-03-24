@@ -32,12 +32,28 @@ FactionListener = GLOBAL.FactionListener =
                     callback()
             , callback
 
+    fetch: (callback) ->
+
+        if argv.debug
+            tracedays = Config.Faction.TraceDaysDebug
+        else
+            tracedays = Config.Faction.TraceDays
+
+        Bot.exec
+            argv:       ['--faction', '--tracedays', tracedays]
+            output:     true
+        , callback
+
     start: ->
 
-        Bot.exec '--faction', Config.Faction.MaxTimeout, (err) ->
+        Bot.exec
+            argv:       ['--faction']
+            timeout:    Config.Faction.MaxTimeout
+            output:     true
+        , (err) ->
             
-            if err
-                logger.error '[Faction] Error: %s', err.message
+            #if err
+            #    logger.error '[Faction] Error: %s', err.message
 
             parseData ->
                 setTimeout FactionListener.start, Config.Faction.FetchInterval

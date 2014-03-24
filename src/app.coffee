@@ -30,30 +30,25 @@ async = require 'async'
 
 async.series [
 
+    Bot.init
+
     (callback) ->
-
-        Bot.init callback
-
-    , (callback) ->
 
         # raise error here
         logger.info '[MungeDetector] Detecting munge set...'
         MungeDetector.detect callback
 
-    , (callback) ->
-        
-        # raise error here
-        AccountInfo.fetch callback
+    AccountInfo.fetch
 
-    , (callback) ->
+    PublicListener.init
 
-        PublicListener.init callback
-    
-    , (callback) ->
+    FactionListener.init
 
-        FactionListener.init callback
+    PublicListener.fetch
 
-    , (callback) ->
+    FactionListener.fetch
+
+    (callback) ->
 
         logger.info '[Bot] Background process started.'
         MungeDetector.start()
@@ -61,9 +56,7 @@ async.series [
         FactionListener.start()
         callback()
 
-    , (callback) ->
-
-        Bot.Server.start callback
+    Bot.Server.start
 
 ], (err) ->
 

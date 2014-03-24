@@ -1,8 +1,10 @@
 o3o = require 'o3o'
 
-exec = require('child_process').exec
+child_process = require 'child_process'
 path = require 'path'
 fs = require 'fs'
+
+readline = require 'readline'
 
 express = require 'express'
 app = express()
@@ -85,14 +87,107 @@ Bot = GLOBAL.Bot =
         async.series [
             Bot.Server.init
         ], callback
+
+    exec: (options, callback) ->
+
+        parameters = options.argv
+        timeout    = options.timeout
+        output     = options.output
+
+        argv = [
+            path.join(exporterBaseDir, 'build/app.js')
+            '--raw'
+            '--detect'
+            'false'
+            '--cookie'
+            Config.Auth.CookieRaw
+        ].concat parameters
+
+        process = child_process.spawn 'node', argv, 
+            cwd: exporterBaseDir
+
+        stdout = ''
+        stderr = ''
+
+        ex = null
+        timer = null
+
+        exithandler = (code, signal) ->
+
+            if timer
+                clearTimeout timer
+                timer = null
+
+            if not ex and code is 0 and signal is null
+                callback null, stdout, stderr
+                return
+
+            if not ex
+                ex = new Error 'Command failed: ' + stderr
+                ex.code = code
+                ex.signal = signal
+
+            callback ex, stdout, stderr
+
+        errorhandler = (e) ->
+
+            ex = e
+            process.stdout.destroy()
+            process.stderr.destroy()
+            exithandler()
+
+        kill = ->
+
+            process.stdout.destroy();
+            process.stderr.destroy();
+
+            try
+                process.kill()
+            catch e
+                ex = e
+                exithandler()
+
+        pipeLog = (line) ->
+
+            p = line.indexOf ':'
+            
+            if p is -1
+                logger.info line
+                return
+
+            type = line.substr 0, p
+            if ['info', 'error', 'warn'].indexOf(type) isnt -1
+                logger[type] line.substr p + 2
+            else
+                logger.info line
+
+        if timeout
+            timer = setTimeout ->
+                kill()
+                timer = null
+            , timeout
+
+        process.stderr.setEncoding 'utf8'
+        process.stdout.setEncoding 'utf8'
+
+        readline.createInterface
+            input:      process.stdout
+            terminal:   false
+        .on 'line', (line) ->
+            stdout += line + '\n'
+            pipeLog line
+
+        readline.createInterface
+            input:      process.stderr
+            terminal:   false
+        .on 'line', (line) ->
+            stderr += line + '\n'
+            pipeLog line
+
+        process.on 'error', errorhandler
+
+        process.on 'close', exithandler
     
-    exec: (parameters, timeout, callback) ->
-
-        exec 'node ' + path.join(exporterBaseDir, 'build/app.js') + ' --detect false --cookie ' + JSON.stringify(Config.Auth.CookieRaw) + ' ' + parameters,
-            cwd:     exporterBaseDir
-            timeout: timeout
-        , callback
-
     removePunc: (str) ->
 
         str.replace(/[\.,-\/#!$%\^&\*;:{}=\-_`~()]/g, '').trim()
