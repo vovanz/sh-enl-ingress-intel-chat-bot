@@ -68,7 +68,8 @@ parseData = (callback) ->
 
         next = ->
 
-            cursor.nextObject p
+            setImmediate ->
+                cursor.nextObject p
 
         finish = ->
 
