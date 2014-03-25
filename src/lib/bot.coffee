@@ -75,6 +75,8 @@ Bot = GLOBAL.Bot =
 
         plugins: serverPlugins
 
+        routeEntries: []
+
         start: (callback) ->
 
             app.listen Config.Server.Port, ->
@@ -87,6 +89,10 @@ Bot = GLOBAL.Bot =
             app.configure ->
                 app.use express.urlencoded()
                 app.use express.json()
+
+            Bot.Server.get '/help', 'Show help messages', (req, res) ->
+
+                res.json Bot.Server.routeEntries
 
             async.eachSeries serverPluginList, (plugin, callback) ->
                 if plugin.init?
@@ -221,3 +227,15 @@ Bot = GLOBAL.Bot =
 
         r = Math.floor Math.random() * arr.length
         return arr[r]
+
+['get', 'post', 'put', 'delete'].forEach (method) ->
+
+    Bot.Server[method] = (path, desc, callback) ->
+
+        Bot.Server.routeEntries.push
+            method: method
+            path:   path
+            desc:   desc
+        app[method] path, callback
+
+module.exports = plugin

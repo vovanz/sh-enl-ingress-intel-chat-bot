@@ -11,7 +11,7 @@ plugin =
 
     init: (callback) ->
 
-        helper.get '/manage/auth/whitelist', 'List acceptable players', (req, res) ->
+        Bot.Server.get '/manage/auth/whitelist', 'List acceptable players', (req, res) ->
 
             response = []
 
@@ -34,7 +34,7 @@ plugin =
                 res.json response
 
 
-        helper.put '/manage/auth/whitelist/:player', 'Add an acceptable player', (req, res) ->
+        Bot.Server.put '/manage/auth/whitelist/:player', 'Add an acceptable player', (req, res) ->
 
             player = req.params.player
 
@@ -45,7 +45,7 @@ plugin =
 
             res.json storage.acceptedAgents
 
-        helper.delete '/manage/auth/whitelist/:player', 'Remove an acceptable player', (req, res) ->
+        Bot.Server.delete '/manage/auth/whitelist/:player', 'Remove an acceptable player', (req, res) ->
 
             player = req.params.player
 
@@ -59,11 +59,11 @@ plugin =
 
             res.json storage.acceptedAgents
 
-        helper.get '/auth/help', 'Show help messages', (req, res) ->
+        Bot.Server.get '/auth/help', 'Show help messages', (req, res) ->
 
             res.json requestEntries
 
-        helper.post '/auth/token/:player', 'Generate new access token', (req, res) ->
+        Bot.Server.post '/auth/token/:player', 'Generate new access token', (req, res) ->
 
             player = req.params.player
 
@@ -87,7 +87,7 @@ plugin =
                     token:  token
                     player: player
 
-        helper.get '/auth/token/:token', 'Check validation status of the token', (req, res) ->
+        Bot.Server.get '/auth/token/:token', 'Check validation status of the token', (req, res) ->
 
             token = req.params.token
 
@@ -144,17 +144,5 @@ plugin =
                 callback()
 
         ], callback
-
-helper = {}
-
-['get', 'post', 'put', 'delete'].forEach (method) ->
-
-    helper[method] = (path, desc, callback) ->
-
-        requestEntries.push
-            method: method
-            path:   path
-            desc:   desc
-        Bot.Server.app[method] path, callback
 
 module.exports = plugin
