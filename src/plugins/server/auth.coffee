@@ -1,3 +1,5 @@
+storage = require(LIB_DIR + '/storage.js')('plugin.auth')
+
 randomstring = require 'randomstring'
 async = require 'async'
 
@@ -9,14 +11,67 @@ plugin =
 
     init: (callback) ->
 
+        helper.get '/manage/auth/whitelist', 'List acceptable players', (req, res) ->
+
+            response = []
+
+            async.eachSeries storage.acceptedAgents, (agent, callback) ->
+                
+                s =
+                    player: agent
+                    valid:  false
+
+                Database.db.collection('Bot.Auth.Token').findOne
+                    player: agent
+                    valid:  true
+                , (err, result) ->
+                    s.valid = true if result
+                    response.push s
+                    callback()
+
+            , ->
+
+                res.json response
+
+
+        helper.put '/manage/auth/whitelist/:player', 'Add an acceptable player', (req, res) ->
+
+            player = req.params.player
+
+            if storage.acceptedAgents.indexOf(player) is -1
+                logger.info '[Auth] Added acceptable player: %s', player
+                storage.acceptedAgents.push player
+                storage.save() if not argv.debug
+
+            res.json storage.acceptedAgents
+
+        helper.delete '/manage/auth/whitelist/:player', 'Remove an acceptable player', (req, res) ->
+
+            player = req.params.player
+
+            pos = storage.acceptedAgents.indexOf(player)
+            if pos isnt -1
+                storage.acceptedAgents.splice pos, 1
+                storage.save() if not argv.debug
+                Database.db.collection('Bot.Auth.Token').remove
+                    player: player
+                , noop
+
+            res.json storage.acceptedAgents
+
         helper.get '/auth/help', 'Show help messages', (req, res) ->
 
             res.json requestEntries
 
-        helper.get '/auth/token/new/:player', 'Generate new access token', (req, res) ->
+        helper.post '/auth/token/:player', 'Generate new access token', (req, res) ->
+
+            player = req.params.player
+
+            if storage.acceptedAgents.indexOf(player) is -1
+                return res.json
+                    error: 'Not in acceptable list'
 
             token = randomstring.generate()
-            player = req.params.player
 
             Database.db.collection('Bot.Auth.Token').insert
                 
@@ -32,7 +87,7 @@ plugin =
                     token:  token
                     player: player
 
-        helper.get '/auth/token/status/:token', 'Check validation status of the token', (req, res) ->
+        helper.get '/auth/token/:token', 'Check validation status of the token', (req, res) ->
 
             token = req.params.token
 
@@ -42,7 +97,7 @@ plugin =
 
             , (err, result) ->
 
-                if err or not result?
+                if err or not result
                     return res.json
                         token: token
                         valid: false
@@ -51,7 +106,9 @@ plugin =
                     token: token
                     valid: result.valid
 
-        callback()
+        storage.fetch
+            acceptedAgents: []
+        , callback
 
     checkToken: (token, player, callback) ->
 
@@ -67,8 +124,7 @@ plugin =
 
                 , (err, result) ->
 
-                    if err or not result?
-                        return callback false
+                    return callback 'No token available' if err or not result
 
                     callback()
 
@@ -84,14 +140,14 @@ plugin =
 
             (callback) ->
 
-                logger.info '[Auth] Successfully validated player %s [token: %s]', player, token
+                logger.info '[Auth] Successfully validated player %s [token=%s]', player, token
                 callback()
 
         ], callback
 
 helper = {}
 
-['get', 'post'].forEach (method) ->
+['get', 'post', 'put', 'delete'].forEach (method) ->
 
     helper[method] = (path, desc, callback) ->
 

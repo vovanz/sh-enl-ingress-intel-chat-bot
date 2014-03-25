@@ -13,8 +13,7 @@ logger.add logger.transports.Console,
 logger.add logger.transports.File,
     filename:   ROOT_DIR + '/bot.log'
 
-noop = GLOBAL.noop = ->
-    null
+noop = GLOBAL.noop = -> null
 
 require APP_DIR + '/config.js'
 require LIB_DIR + '/bot.js'
