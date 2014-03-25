@@ -59,4 +59,6 @@ async.series [
 
 ], (err) ->
 
-    Database.db.close() if err
+    if err
+        logger.error err
+        Database.db.close()
