@@ -13,12 +13,19 @@ async = require 'async'
 
 exporterBaseDir = ROOT_DIR + '/ingress-exporter'
 
-serverPlugins = require('require-all')
+######################
+# Get plugins
+_plugins = require('require-all')
     dirname: PLUGINS_DIR + '/server'
     filter : /(.+)\.js$/,
 
 serverPluginList = []
-serverPluginList.push plugin for pname, plugin of serverPlugins
+serverPluginList.push plugin for pname, plugin of _plugins
+serverPlugins = {}
+serverPlugins[plugin.name] = plugin for plugin in serverPluginList
+
+_plugins = null
+######################
 
 class FormatableTemplate
 
@@ -66,6 +73,8 @@ Bot = GLOBAL.Bot =
 
         app: app
 
+        plugins: serverPlugins
+
         start: (callback) ->
 
             app.listen Config.Server.Port, ->
@@ -74,6 +83,10 @@ Bot = GLOBAL.Bot =
                 callback()
 
         init: (callback) ->
+
+            app.configure ->
+                app.use express.urlencoded()
+                app.use express.json()
 
             async.eachSeries serverPluginList, (plugin, callback) ->
                 if plugin.init?
