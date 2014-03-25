@@ -1,5 +1,3 @@
-storage = require(LIB_DIR + '/storage.js')('plugin.auth')
-
 randomstring = require 'randomstring'
 async = require 'async'
 
@@ -9,68 +7,60 @@ plugin =
 
     name: 'auth'
 
+    bootstrap: (callback) ->
+
+        Bot.Server.app.use (req, res, next) ->
+
+            req._check_token = plugin.checkTokenAccessable
+            next()
+
+        callback()
+
     init: (callback) ->
 
-        Bot.Server.get '/manage/auth/whitelist', 'List acceptable players', (req, res) ->
+        Bot.Server.get '/manage/auth/tokens', AccessLevel.LEVEL_ROOT, 'List all tokens', (req, res) ->
 
-            response = []
-
-            async.eachSeries storage.acceptedAgents, (agent, callback) ->
+            Database.db.collection('Bot.Auth.Token').find
+                aclv:
+                    $gte:   AccessLevel.LEVEL_VALIDATED
+            .toArray (err, ts) ->
                 
-                s =
-                    player: agent
-                    valid:  false
+                tokens = []
 
-                Database.db.collection('Bot.Auth.Token').findOne
-                    player: agent
-                    valid:  true
-                , (err, result) ->
-                    s.valid = true if result
-                    response.push s
-                    callback()
+                for token in ts
+                    tokens.push
+                        player:         token.player
+                        token:          token.token
+                        access_level:   AccessLevel.stringify(token.aclv)
 
-            , ->
+                res.json tokens
 
-                res.json response
-
-
-        Bot.Server.put '/manage/auth/whitelist/:player', 'Add an acceptable player', (req, res) ->
+        Bot.Server.put '/manage/auth/:player/:level', AccessLevel.LEVEL_ROOT, 'Set access-level of all tokens of an agent', (req, res) ->
 
             player = req.params.player
+            level = AccessLevel.parse(req.params.level)
 
-            if storage.acceptedAgents.indexOf(player) is -1
-                logger.info '[Auth] Added acceptable player: %s', player
-                storage.acceptedAgents.push player
-                storage.save() if not argv.debug
-
-            res.json storage.acceptedAgents
-
-        Bot.Server.delete '/manage/auth/whitelist/:player', 'Remove an acceptable player', (req, res) ->
-
-            player = req.params.player
-
-            pos = storage.acceptedAgents.indexOf(player)
-            if pos isnt -1
-                storage.acceptedAgents.splice pos, 1
-                storage.save() if not argv.debug
-                Database.db.collection('Bot.Auth.Token').remove
-                    player: player
-                , noop
-
-            res.json storage.acceptedAgents
-
-        Bot.Server.get '/auth/help', 'Show help messages', (req, res) ->
-
-            res.json requestEntries
-
-        Bot.Server.post '/auth/token/:player', 'Generate new access token', (req, res) ->
-
-            player = req.params.player
-
-            if storage.acceptedAgents.indexOf(player) is -1
+            if level is AccessLevel.LEVEL_UNKNOWN
                 return res.json
-                    error: 'Not in acceptable list'
+                    error: 'Invalid access-level'
 
+            Database.db.collection('Bot.Auth.Token').update
+                player:         player
+                aclv:
+                    $gte:       AccessLevel.LEVEL_VALIDATED
+            ,
+                $set:
+                    aclv: level
+            ,
+                multi: true
+            , (err, affected) ->
+                logger.info '[Auth] Updated access-level of %s to %s', player, AccessLevel.stringify(level)
+                res.json
+                    updated_tokens: affected
+
+        Bot.Server.post '/auth/token/:player', AccessLevel.LEVEL_GUEST, 'Generate a new token', (req, res) ->
+
+            player = req.params.player
             token = randomstring.generate()
 
             Database.db.collection('Bot.Auth.Token').insert
@@ -78,8 +68,8 @@ plugin =
                 token:  token
                 player: player
                 ip:     req.connection.remoteAddress
-                valid:  false
                 time:   Date.now()
+                aclv:   AccessLevel.LEVEL_GUEST
 
             , (err) ->
 
@@ -87,7 +77,7 @@ plugin =
                     token:  token
                     player: player
 
-        Bot.Server.get '/auth/token/:token', 'Check validation status of the token', (req, res) ->
+        Bot.Server.get '/auth/token/:token', AccessLevel.LEVEL_GUEST, 'Get detail of a token', (req, res) ->
 
             token = req.params.token
 
@@ -99,16 +89,14 @@ plugin =
 
                 if err or not result
                     return res.json
-                        token: token
-                        valid: false
+                        token:          token
+                        access_level:   AccessLevel.stringify(AccessLevel.LEVEL_GUEST)
 
                 res.json
-                    token: token
-                    valid: result.valid
+                    token:          token
+                    access_level:   AccessLevel.stringify(result.aclv)
 
-        storage.fetch
-            acceptedAgents: []
-        , callback
+        callback()
 
     checkToken: (token, player, callback) ->
 
@@ -120,11 +108,13 @@ plugin =
                     
                     token:  token
                     player: player
-                    valid:  false
+                    aclv:   AccessLevel.LEVEL_GUEST
 
                 , (err, result) ->
 
-                    return callback 'No token available' if err or not result
+                    if err or not result
+                        callback 'No token available'
+                        return
 
                     callback()
 
@@ -133,9 +123,10 @@ plugin =
                 Database.db.collection('Bot.Auth.Token').update
                     token:  token
                     player: player
+                    aclv:   AccessLevel.LEVEL_GUEST
                 ,
                     $set:
-                        valid: true
+                        aclv:   AccessLevel.LEVEL_VALIDATED
                 , callback
 
             (callback) ->
@@ -144,5 +135,22 @@ plugin =
                 callback()
 
         ], callback
+
+    checkTokenAccessable: (access_level, token, callback) ->
+
+        return callback false if not token
+        
+        Database.db.collection('Bot.Auth.Token').findOne
+            
+            token: token
+            aclv:
+                $gte: access_level
+
+        , (err, result) ->
+
+            if err or not result
+                callback false
+            else
+                callback true
 
 module.exports = plugin

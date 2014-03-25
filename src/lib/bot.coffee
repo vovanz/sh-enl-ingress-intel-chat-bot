@@ -67,6 +67,41 @@ class FormatableTemplate
 
         @value
 
+GLOBAL.AccessLevel = 
+
+    LEVEL_UNKNOWN:      -1
+    LEVEL_GUEST:        0
+    LEVEL_VALIDATED:    10
+    LEVEL_TRUSTED:      100
+    LEVEL_CORE:         1000
+    LEVEL_ROOT:         9999
+
+    stringify: (v) ->
+
+        return 'LEVEL_GUEST'        if v is AccessLevel.LEVEL_GUEST
+        return 'LEVEL_VALIDATED'    if v is AccessLevel.LEVEL_VALIDATED
+        return 'LEVEL_TRUSTED'      if v is AccessLevel.LEVEL_TRUSTED
+        return 'LEVEL_CORE'         if v is AccessLevel.LEVEL_CORE
+        return 'LEVEL_ROOT'         if v is AccessLevel.LEVEL_ROOT
+        
+        'LEVEL_UNKNOWN'
+
+    parse: (v) ->
+
+        return AccessLevel.LEVEL_GUEST      if v is 'LEVEL_GUEST'
+        return AccessLevel.LEVEL_VALIDATED  if v is 'LEVEL_VALIDATED'
+        return AccessLevel.LEVEL_TRUSTED    if v is 'LEVEL_TRUSTED'
+        return AccessLevel.LEVEL_CORE       if v is 'LEVEL_CORE'
+        return AccessLevel.LEVEL_ROOT       if v is 'LEVEL_ROOT'
+        
+        AccessLevel.LEVEL_UNKNOWN
+
+    isValid: (v) ->
+
+        return false if AccessLevel.stringify(v) is 'LEVEL_UNKNOWN'
+
+        true
+
 Bot = GLOBAL.Bot =
     
     Server:
@@ -84,16 +119,20 @@ Bot = GLOBAL.Bot =
                 logger.info '[Server] Started @ port %d', Config.Server.Port
                 callback()
 
+        bootstrap: (callback) ->
+
+            app.use express.compress()
+            app.use express.urlencoded()
+            app.use express.json()
+
+            async.eachSeries serverPluginList, (plugin, callback) ->
+                if plugin.bootstrap?
+                    plugin.bootstrap callback
+                else
+                    callback()
+            , callback
+
         init: (callback) ->
-
-            app.configure ->
-                app.use express.compress()
-                app.use express.urlencoded()
-                app.use express.json()
-
-            Bot.Server.get '/help', 'Show help messages', (req, res) ->
-
-                res.json Bot.Server.routeEntries
 
             async.eachSeries serverPluginList, (plugin, callback) ->
                 if plugin.init?
@@ -105,6 +144,7 @@ Bot = GLOBAL.Bot =
     init: (callback) ->
 
         async.series [
+            Bot.Server.bootstrap
             Bot.Server.init
         ], callback
 
@@ -139,8 +179,7 @@ Bot = GLOBAL.Bot =
                 timer = null
 
             if not ex and code is 0 and signal is null
-                callback null, stdout, stderr
-                return
+                return callback null, stdout, stderr
 
             if not ex
                 ex = new Error 'Command failed: ' + stderr
@@ -231,12 +270,27 @@ Bot = GLOBAL.Bot =
 
 ['get', 'post', 'put', 'delete'].forEach (method) ->
 
-    Bot.Server[method] = (path, desc, callback) ->
+    Bot.Server[method] = (path, min_access_level, desc, callback) ->
 
         Bot.Server.routeEntries.push
-            method: method
-            path:   path
-            desc:   desc
-        app[method] path, callback
+            method:             method
+            path:               path
+            desciption:         desc
+            min_access_level:   AccessLevel.stringify min_access_level
 
+        app[method] path, (req, res) ->
+
+            if argv.auth is 'false' or min_access_level <= AccessLevel.LEVEL_GUEST
+                return callback req, res
+
+            if req._check_token?
+                req._check_token min_access_level, req.query.token, (ok) ->
+
+                    return callback req, res if ok
+
+                    res.json
+                        error: "No permission. Required access-level: #{AccessLevel.stringify(min_access_level)}"
+            else
+                callback req, res
+            
 module.exports = plugin
