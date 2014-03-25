@@ -87,6 +87,7 @@ Bot = GLOBAL.Bot =
         init: (callback) ->
 
             app.configure ->
+                app.use express.compress()
                 app.use express.urlencoded()
                 app.use express.json()
 
