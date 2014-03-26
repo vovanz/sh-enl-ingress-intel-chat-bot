@@ -52,7 +52,7 @@ MungeDetector = GLOBAL.MungeDetector =
 
                     callback()
 
-            , (callback) ->
+            (callback) ->
 
                 # 1. test by internal munge-set
 
@@ -70,7 +70,7 @@ MungeDetector = GLOBAL.MungeDetector =
                     logger.warn '[MungeDetector] Failed.'
                     callback()
 
-            , (callback) ->
+            (callback) ->
 
                 # 2. extract munge data from Ingress.com/intel
 
@@ -85,7 +85,7 @@ MungeDetector = GLOBAL.MungeDetector =
                     logger.warn '[MungeDetector] Failed.'
                     callback()
 
-            , (callback) ->
+            (callback) ->
 
                 # :( no useable munge-set
 
