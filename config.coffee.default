@@ -33,6 +33,10 @@ Config = GLOBAL.Config =
             #Lat: 31.27855085894653
             #Lng: 121.4923095703125
 
+    Tracker:
+
+        PageSize: 500
+
     Chat:
 
         FetchItemCount: 300
