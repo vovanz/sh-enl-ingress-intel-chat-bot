@@ -1,10 +1,10 @@
 plugin = 
 
-    name: 'help'
+    name: 'crossdomain'
 
     bootstrap: (callback) ->
 
-        Bot.Server.app.all '/', (req, res, next) ->
+        Bot.Server.app.use (req, res, next) ->
 
             res.header 'Access-Control-Allow-Origin', '*'
             res.header 'Access-Control-Allow-Headers', 'X-Requested-With'
