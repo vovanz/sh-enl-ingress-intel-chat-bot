@@ -122,6 +122,7 @@ Bot = GLOBAL.Bot =
         bootstrap: (callback) ->
 
             app.use express.compress()
+            app.use express.methodOverride()
             app.use express.urlencoded()
             app.use express.json()
 
