@@ -98,9 +98,11 @@ window.plugin.SHENLAuth.sendTokenValidation = function(token, callback) {
     chatTab: 'faction'
   };
 
+  var t = null;
+
   function stopAndReturn(err, data) {
     if (t != null) {
-      clearInterval(t);
+      clearTimeout(t);
       t = null;  
     }
     callback(err, data);
@@ -114,7 +116,7 @@ window.plugin.SHENLAuth.sendTokenValidation = function(token, callback) {
           return stopAndReturn(data.error);
         }
         if (data.access_level == 'LEVEL_VALIDATED') {
-          stopAndReturn(null, data);
+          return stopAndReturn(null, data);
         }
 
         // ELSE: not validated...
@@ -126,8 +128,6 @@ window.plugin.SHENLAuth.sendTokenValidation = function(token, callback) {
     });
   }
 
-  var t = null;
-
   window.postAjax('sendPlext', data, function(response) {
     if (response.error) {
       return stopAndReturn(response.error);
@@ -136,6 +136,21 @@ window.plugin.SHENLAuth.sendTokenValidation = function(token, callback) {
   }, function() {
     stopAndReturn('Unable to send request to ingress server');
   });
+}
+
+var activate_plugins = function() {
+  if (window.shenlBootPlugins) {
+    window.shenlBootPlugins.forEach(function(ref) {
+      try {
+        ref();
+      } catch(err) {
+        console.error("error starting shenl plugin: error: "+err);
+        debugger;
+      }
+    });
+  }
+
+  window.shenlAuthorized = true;
 }
 
 var setup = function() {
@@ -153,16 +168,21 @@ var setup = function() {
               alert(err);
             }
             window.plugin.SHENLAuth.set('access-token', data.token);
-            alert('Authorization succeeded! Your access-token has been saved locally.');
+            alert('Authorization succeeded and our access-token has been saved locally.');
+            activate_plugins();
           });
           $(this).dialog('close');
-          alert('Authorization in progress. Please wait NO LESS than 1 minute.\n(You can close this dialog)');
+          alert('Authorization in progress. Please wait at least 1 minute to complete this action.\n(You can close this dialog)');
         },
       }
     });
+  } else if (window.plugin.SHENLAuth.token !== null) {
+    activate_plugins();
   }
   
 }
+
+
 
 // PLUGIN END //////////////////////////////////////////////////////////
 
