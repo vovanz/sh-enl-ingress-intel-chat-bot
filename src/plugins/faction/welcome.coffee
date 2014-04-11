@@ -40,7 +40,7 @@ plugin =
 
     sayHelloJoke: (player) ->
 
-        FactionUtil.send Bot.getTemplate(Config.Faction.Plugin.Welcome.JokeTemplates).fillPlayer(player).fillSmily().toString()
+        FactionUtil.send Bot.getTemplate('welcome.joke').fillPlayer(player).fillSmily().toString()
 
     sayHello: (player) ->
 
@@ -48,6 +48,6 @@ plugin =
         storage.welcomedAgents[player.toLowerCase()] = true
         storage.save() if not argv.debug
 
-        FactionUtil.send Bot.getTemplate(Config.Faction.Plugin.Welcome.Templates).fillPlayer(player).fillSmily().toString()
+        FactionUtil.send Bot.getTemplate('welcome').fillPlayer(player).fillSmily().toString()
 
 module.exports = plugin

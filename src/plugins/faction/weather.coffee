@@ -195,23 +195,10 @@ plugin =
                 return callback()
 
             if weather.air?
-                str = [
-                    '@{player} ' 
-                    '当前{air_avgname}空气质量：{air_grade}，PM2.5: {air_pm2}，PM10: {air_pm10} ({air_time}发布)；'
-                    '{city}天气：'
-                    '今日{today_weather}，{today_ltmp}~{today_htmp}℃，{today_notice}；'
-                    '明日{tomorrow_weather}，{tomorrow_ltmp}~{tomorrow_htmp}℃，{tomorrow_notice}'
-                    '。'
-                ].join('')
+                template = Bot.getTemplate 'weather.air'
             else
-                str = [
-                    '@{player} '
-                    '{city}天气：'
-                    '今日{today_weather}，{today_ltmp}~{today_htmp}℃，明日{tomorrow_weather}，{tomorrow_ltmp}~{tomorrow_htmp}℃'
-                    '。'
-                ].join('')
+                template = Bot.getTemplate 'weather'
 
-            template = Bot.generateTemplate str
             template = template.fill
                 city:               weather.city
                 today_weather:      weather.data[0].weather

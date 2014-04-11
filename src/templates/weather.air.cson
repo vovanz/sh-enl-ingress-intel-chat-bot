@@ -1,0 +1,8 @@
+[
+    ['@{player} ']
+    ['当前{air_avgname}空气质量：{air_grade}，PM2.5: {air_pm2}，PM10: {air_pm10} ({air_time}发布)；']
+    ['{city}天气：']
+    ['今日{today_weather}，{today_ltmp}~{today_htmp}℃，{today_notice}；']
+    ['明日{tomorrow_weather}，{tomorrow_ltmp}~{tomorrow_htmp}℃，{tomorrow_notice}']
+    ['。']
+]

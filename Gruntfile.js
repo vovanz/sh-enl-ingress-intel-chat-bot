@@ -38,6 +38,12 @@ module.exports = function (grunt)
 
                project: {
                     files: [{
+                         expand: true,
+                         cwd: 'src/',
+                         src: ['**/*.cson'],
+                         dest: 'build/',
+                         ext: '.json'
+                    }, {
                          src: 'config.cson',
                          dest: 'build/config.json'
                     }]

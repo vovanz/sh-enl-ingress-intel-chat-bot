@@ -1,0 +1,6 @@
+[
+    ['@{player} ']
+    ['{city}天气：']
+    ['今日{today_weather}，{today_ltmp}~{today_htmp}℃，明日{tomorrow_weather}，{tomorrow_ltmp}~{tomorrow_htmp}℃']
+    ['。']
+]

@@ -252,7 +252,12 @@ Bot = GLOBAL.Bot =
 
         str.replace(/[\.,-\/#!$%\^&\*;:{}=\-_`~()]/g, '').trim()
 
-    getTemplate: (templates) ->
+    getTemplate: (file) ->
+
+        templates = require(TEMPLATE_DIR + '/' + file + '.json')
+        Bot.getTemplateObj templates
+
+    getTemplateObj: (templates) ->
 
         s = ''
         for arr in templates

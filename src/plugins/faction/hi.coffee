@@ -13,15 +13,7 @@ plugin =
 
         r = FactionUtil.parseCallingBody item
         
-        FactionUtil.send Bot.getTemplate([
-            ['@{player} ']
-            [
-                '你好~ '
-                'Hello~ '
-                'Hi! '
-            ]
-            ['{smily:smile}']
-        ]).fillPlayer(r.player).fillSmily().toString(), r.body
+        FactionUtil.send Bot.getTemplate('hi').fillPlayer(r.player).fillSmily().toString(), r.body
 
         callback()
 
