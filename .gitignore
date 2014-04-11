@@ -14,5 +14,5 @@ npm-debug.log
 node_modules
 
 /bot.log
-/config.coffee
+/config.cson
 /build

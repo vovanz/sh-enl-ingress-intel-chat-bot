@@ -15,7 +15,8 @@ logger.add logger.transports.File,
 
 noop = GLOBAL.noop = -> null
 
-require APP_DIR + '/config.js'
+Config = GLOBAL.Config = require APP_DIR + '/config.json'
+
 require LIB_DIR + '/bot.js'
 require LIB_DIR + '/leaflet.js'
 require LIB_DIR + '/utils.js'

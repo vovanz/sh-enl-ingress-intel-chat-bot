@@ -1,0 +1,47 @@
+Server:
+
+    Port: 8888
+
+Auth:
+
+    CookieRaw: '....'
+
+Request:
+
+    UserAgent:     'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.107 Safari/537.36'
+    MaxParallel:   10
+    MinIntervalMS: 300
+
+Public:
+
+    FetchInterval: 120 * 1000
+    MaxTimeout:    240 * 1000
+
+Tracker:
+
+    PageSize: 100
+
+Chat:
+
+    FetchItemCount: 300
+
+Faction:
+
+    FetchInterval:    30 * 1000
+    MaxTimeout:       60 * 1000
+    TraceDays:        10
+    TraceDaysDebug:   2
+    MaxParseTimespan: 10 * 24 * 60 * 60 * 1000
+    Center:
+        Lat: 31.222
+        Lng: 121.500
+
+Database:
+
+    ConnectString: 'mongodb://localhost:27017/ingress'
+
+    MaxParallel:    10
+    
+    Options:
+
+        safe:       true
