@@ -28,7 +28,6 @@ plugin =
 
                     Database.db.collection('Chat.Public').find
                         'markup.PLAYER1.plain': player
-                    , null
                     .sort
                         time: -1
                     .skip   (page - 1) * Config.Tracker.PageSize
