@@ -47,7 +47,7 @@ class FormatableTemplate
 
         @value = @value.replace /\{([^{}]+)\}/g, (match, key) ->
             if key.indexOf('smily') is 0
-                return o3o.fetch key.substr(6)
+                return o3o key.substr(6)
             else
                 return '{' + key + '}'
 
