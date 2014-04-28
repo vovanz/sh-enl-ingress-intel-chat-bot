@@ -121,10 +121,9 @@ Bot = GLOBAL.Bot =
 
         bootstrap: (callback) ->
 
-            app.use express.compress()
-            app.use express.methodOverride()
-            app.use express.urlencoded()
-            app.use express.json()
+            app.use require 'compression'
+            app.use require 'method-override'
+            app.use require 'body-parser'
 
             async.eachSeries serverPluginList, (plugin, callback) ->
                 if plugin.bootstrap?

@@ -18,6 +18,9 @@
         "o3o": "*",
         "lru-cache": "*",
         "express": "*",
+        "compression": "*",
+        "method-override": "*",
+        "body-parser": "*",
         "randomstring": "*"
     }
 }
