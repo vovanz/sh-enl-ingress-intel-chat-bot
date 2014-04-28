@@ -121,9 +121,9 @@ Bot = GLOBAL.Bot =
 
         bootstrap: (callback) ->
 
-            app.use require 'compression'
-            app.use require 'method-override'
-            app.use require 'body-parser'
+            app.use require('compression')()
+            app.use require('method-override')()
+            app.use require('body-parser')()
 
             async.eachSeries serverPluginList, (plugin, callback) ->
                 if plugin.bootstrap?
