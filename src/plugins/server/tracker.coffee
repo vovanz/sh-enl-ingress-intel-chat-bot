@@ -1,4 +1,5 @@
 async = require 'async'
+moment = require 'moment'
 
 plugin = 
 
@@ -33,6 +34,9 @@ plugin =
                     .skip   (page - 1) * Config.Tracker.PageSize
                     .limit  Config.Tracker.PageSize
                     .toArray (err, records) ->
+
+                        for rec in records
+                            rec.time_str = moment(rec.time).format 'LLLL' if rec.time?
 
                         res.json records
 

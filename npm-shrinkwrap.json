@@ -680,6 +680,10 @@
         }
       }
     },
+    "moment": {
+      "version": "2.6.0",
+      "from": "moment@"
+    },
     "mongoskin": {
       "version": "1.4.1",
       "from": "mongoskin@1.4.1",

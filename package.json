@@ -21,6 +21,7 @@
         "compression": "*",
         "method-override": "*",
         "body-parser": "*",
-        "randomstring": "*"
+        "randomstring": "*",
+        "moment": "*"
     }
 }
