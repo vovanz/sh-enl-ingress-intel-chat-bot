@@ -92,7 +92,7 @@ class RequestFactory
         activeMunge = Munges.Data[Munges.ActiveSet]
         normalizeFunc = Munges.NormalizeParamCount.func
 
-        methodName = 'dashboard.' + options.action
+        methodName = 'dashboard_' + options.action
         versionStr = 'version_parameter'
 
         methodName = activeMunge[methodName]
