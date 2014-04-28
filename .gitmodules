@@ -1,3 +1,4 @@
 [submodule "ingress-exporter"]
-	path = ingress-exporter
+	ignore = dirty
+    path = ingress-exporter
 	url = https://github.com/breeswish/ingress-exporter.git
