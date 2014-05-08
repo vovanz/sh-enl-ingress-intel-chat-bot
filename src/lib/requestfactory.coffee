@@ -170,7 +170,7 @@ class RequestFactory
                 logger.error '[ERROR] CSRF verification failed'
                 return new Error 'CSRF verification failed'
 
-            if body.indexOf('User not authenticated') > -1
+            if body.indexOf('Sign in') > -1 or body.indexOf('User not authenticated') > -1
                 logger.error '[ERROR] User not authenticated'
                 return new Error 'Auth failed'
 
