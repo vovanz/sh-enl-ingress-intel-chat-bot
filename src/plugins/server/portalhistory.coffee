@@ -41,7 +41,10 @@ get_portal_history = (req, res) ->
             response = []
 
             # sort desc
-            records.sort (a, b) -> b.time - a.time
+            records.sort (a, b) ->
+
+                return b.time - a.time if b.time isnt a.time
+                return a.event - b.event
 
             # unique
             for rec in records
@@ -61,6 +64,12 @@ get_portal_history = (req, res) ->
             # flip to own faction
             
             if item.markup.TEXT1.plain is ' captured '
+                records.push
+                    time:   item.time
+                    player: item.markup.PLAYER1
+                    event:  'capture'
+                    portal: item.markup.PORTAL1
+
                 lastCaptureEvent = item
                 return next()
 
