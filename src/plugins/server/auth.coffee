@@ -33,7 +33,7 @@ plugin =
                         token:          token.token
                         access_level:   AccessLevel.stringify(token.aclv)
 
-                res.json tokens
+                res.jsonp tokens
 
         Bot.Server.put '/manage/auth/:player/:level', AccessLevel.LEVEL_ROOT, 'Set access-level of all tokens of an agent', (req, res) ->
 
@@ -41,7 +41,7 @@ plugin =
             level = AccessLevel.parse(req.params.level)
 
             if level is AccessLevel.LEVEL_UNKNOWN
-                return res.json
+                return res.jsonp
                     error: 'Invalid access-level'
 
             Database.db.collection('Bot.Auth.Token').update
@@ -55,7 +55,7 @@ plugin =
                 multi: true
             , (err, affected) ->
                 logger.info '[Auth] Updated access-level of %s to %s', player, AccessLevel.stringify(level)
-                res.json
+                res.jsonp
                     updated_tokens: affected
 
         Bot.Server.post '/auth/token/:player', AccessLevel.LEVEL_GUEST, 'Generate a new token', (req, res) ->
@@ -73,7 +73,7 @@ plugin =
 
             , (err) ->
 
-                res.json
+                res.jsonp
                     token:  token
                     player: player
 
@@ -88,11 +88,11 @@ plugin =
             , (err, result) ->
 
                 if err or not result
-                    return res.json
+                    return res.jsonp
                         token:          token
                         access_level:   AccessLevel.stringify(AccessLevel.LEVEL_GUEST)
 
-                res.json
+                res.jsonp
                     token:          token
                     access_level:   AccessLevel.stringify(result.aclv)
 

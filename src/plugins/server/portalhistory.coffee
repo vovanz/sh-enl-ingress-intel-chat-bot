@@ -55,7 +55,7 @@ get_portal_history = (req, res) ->
             for rec in response
                 rec.time_str = moment(rec.time).format 'LLLL' if rec.time?
 
-            res.json response
+            res.jsonp response
 
         p = (err, item) ->
 

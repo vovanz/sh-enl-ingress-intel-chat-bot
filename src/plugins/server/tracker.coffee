@@ -38,7 +38,7 @@ plugin =
                         for rec in records
                             rec.time_str = moment(rec.time).format 'LLLL' if rec.time?
 
-                        res.json records
+                        res.jsonp records
 
             ]
 

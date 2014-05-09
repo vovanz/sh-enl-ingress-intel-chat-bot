@@ -6,7 +6,7 @@ plugin =
 
         Bot.Server.get '/help', AccessLevel.LEVEL_GUEST, 'Show help messages', (req, res) ->
 
-            res.json Bot.Server.routeEntries
+            res.jsonp Bot.Server.routeEntries
 
         callback()
 
