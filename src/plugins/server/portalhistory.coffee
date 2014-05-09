@@ -36,10 +36,20 @@ get_portal_history = (req, res) ->
 
         finish = ->
 
+            lastTime = null
+
+            response = []
+
+            # unique
             for rec in records
+                response.push rec if rec.time isnt lastTime
+                lastTime = rec.time
+
+            # time str
+            for rec in response
                 rec.time_str = moment(rec.time).format 'LLLL' if rec.time?
 
-            res.json records
+            res.json response
 
         p = (err, item) ->
 
