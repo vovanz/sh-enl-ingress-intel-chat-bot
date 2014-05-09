@@ -40,6 +40,9 @@ get_portal_history = (req, res) ->
 
             response = []
 
+            # sort desc
+            rec.sort (a, b) -> b.time - a.time
+
             # unique
             for rec in records
                 response.push rec if rec.time isnt lastTime
