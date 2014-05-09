@@ -1,4 +1,3 @@
-async = require 'async'
 moment = require 'moment'
 
 ###
@@ -25,7 +24,7 @@ get_portal_history = (req, res) ->
             $gte: minTimestampMs
     .sort {time: -1}, (err, cursor) ->
 
-        response = []
+        records = []
 
         lastDestroyEvent = null
         lastCaptureEvent = null
@@ -37,7 +36,10 @@ get_portal_history = (req, res) ->
 
         finish = ->
 
-            res.json response
+            for rec in records
+                rec.time_str = moment(rec.time).format 'LLLL' if rec.time?
+
+            res.json records
 
         p = (err, item) ->
 
@@ -51,7 +53,7 @@ get_portal_history = (req, res) ->
 
             if item.markup.TEXT1.plain is ' destroyed an '
                 if item.markup.PLAYER1.team is item.markup.PORTAL1.team
-                    response.push
+                    records.push
                         time:    item.time
                         player:  item.markup.PLAYER1
                         event:   'flip'
@@ -61,7 +63,7 @@ get_portal_history = (req, res) ->
                 if lastDestroyEvent?
                     if lastDestroyEvent.markup.PORTAL1.team isnt item.markup.PORTAL1.team and (lastCaptureEvent is null or lastCaptureEvent.time > lastDestroyEvent.time)
                         if lastDestroyEvent.markup.PLAYER1.team isnt lastDestroyEvent.markup.PORTAL1.team
-                            response.push
+                            records.push
                                 time:    lastDestroyEvent.time
                                 player:  lastDestroyEvent.markup.PLAYER1
                                 event:   'flip'
