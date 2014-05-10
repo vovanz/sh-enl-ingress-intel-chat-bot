@@ -169,10 +169,10 @@ FactionUtil = GLOBAL.FactionUtil =
         lng = Config.Faction.Center.Lng + Math.random() * 0.2 - 0.1
 
         data =
-            message: message.toString()
-            latE6: Math.round(lat * 1e6)
-            lngE6: Math.round(lng * 1e6)
-            chatTab: 'faction'
+            messageSendPlext: message.toString()
+            latE6SendPlext: Math.round(lat * 1e6)
+            lngE6SendPlext: Math.round(lng * 1e6)
+            chatTabSendPlext: 'faction'
 
         request.push
 
