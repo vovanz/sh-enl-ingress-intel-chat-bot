@@ -8,7 +8,10 @@ moment = require 'moment'
     1. [DESTROY RESONATOR] markup.PLAYER1.team == markup.PORTAL1.team
 
 毒到对方阵营：
-    1. 两次时间相邻的DESTROY RESONATOR，markup.PORTAL1.team不一致，且中间没有capture   -> 两次之间有毒
+    1. 两次时间相邻的DESTROY RESONATOR，markup.PORTAL1.team不一致，且中间没有capture   -> 最近一次被毒
+    2. 两次中最近一次不符合“毒到自己阵营”                                              -> 最近一次被毒到对方阵营
+
+    1. 最近一次 DESTROY，较远一次 CAPTURE，markup.PORTAL1.team不一致                  -> 最近一次被毒
     2. 两次中最近一次不符合“毒到自己阵营”                                              -> 最近一次被毒到对方阵营
 
 ###
@@ -69,6 +72,16 @@ get_portal_history = (req, res) ->
                     player: item.markup.PLAYER1
                     event:  'capture'
                     portal: item.markup.PORTAL1
+
+                if lastDestroyEvent?
+                    if lastDestroyEvent.markup.PORTAL1.team isnt item.markup.PORTAL1.team
+                        if lastDestroyEvent.markup.PLAYER1.team isnt lastDestroyEvent.markup.PORTAL1.team
+                            records.push
+                                time:    lastDestroyEvent.time
+                                player:  lastDestroyEvent.markup.PLAYER1
+                                event:   'flip'
+                                event2:  if lastDestroyEvent.markup.PLAYER1.team is 'ENLIGHTENED' then 'ADA Refactor' else 'Jarvis Virus'
+                                portal:  lastDestroyEvent.markup.PORTAL1
 
                 lastCaptureEvent = item
                 return next()
