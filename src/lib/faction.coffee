@@ -168,8 +168,10 @@ FactionUtil = GLOBAL.FactionUtil =
         lat = Config.Faction.Center.Lat + Math.random() * 0.2 - 0.1
         lng = Config.Faction.Center.Lng + Math.random() * 0.2 - 0.1
 
+        message = message.toString()
+
         data =
-            messageSendPlext: message.toString()
+            messageSendPlext: message
             latE6SendPlext: Math.round(lat * 1e6)
             lngE6SendPlext: Math.round(lng * 1e6)
             chatTabSendPlext: 'faction'
@@ -185,10 +187,10 @@ FactionUtil = GLOBAL.FactionUtil =
 
             afterResponse: (callback) ->
 
-                if data.message.length > 30
-                    thMsg = data.message.substr(0, 30) + '...'
+                if message.length > 30
+                    thMsg = message.substr(0, 30) + '...'
                 else
-                    thMsg = data.message
+                    thMsg = message
 
                 logger.info "[Get] #{received}" if received?
                 logger.info "[Send] #{thMsg}"
