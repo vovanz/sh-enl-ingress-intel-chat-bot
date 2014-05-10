@@ -32,6 +32,8 @@ get_portal_history = (req, res) ->
         lastDestroyEvent = null
         lastCaptureEvent = null
 
+        impossibleEvents = {}
+
         next = ->
 
             setImmediate ->
@@ -66,6 +68,20 @@ get_portal_history = (req, res) ->
 
             # flip to own faction
             
+            if item.markup.TEXT1.plain is ' linked '
+                if lastDestroyEvent?
+                    if lastDestroyEvent.markup.PORTAL1.team is item.markup.PORTAL1.team
+                        impossibleEvents[lastDestroyEvent._id] = true
+                
+                return next()
+
+            if item.markup.TEXT1.plain is ' deployed an '
+                if lastDestroyEvent?
+                    if lastDestroyEvent.markup.PORTAL1.team is item.markup.PORTAL1.team
+                        impossibleEvents[lastDestroyEvent._id] = true
+
+                return next()
+            
             if item.markup.TEXT1.plain is ' captured '
                 records.push
                     time:   item.time
@@ -75,7 +91,7 @@ get_portal_history = (req, res) ->
 
                 if lastDestroyEvent?
                     if lastDestroyEvent.markup.PORTAL1.team isnt item.markup.PORTAL1.team
-                        if lastDestroyEvent.markup.PLAYER1.team isnt lastDestroyEvent.markup.PORTAL1.team
+                        if lastDestroyEvent.markup.PLAYER1.team isnt lastDestroyEvent.markup.PORTAL1.team and not impossibleEvents[lastDestroyEvent._id]?
                             records.push
                                 time:    lastDestroyEvent.time
                                 player:  lastDestroyEvent.markup.PLAYER1
@@ -87,7 +103,7 @@ get_portal_history = (req, res) ->
                 return next()
 
             if item.markup.TEXT1.plain is ' destroyed an '
-                if item.markup.PLAYER1.team is item.markup.PORTAL1.team
+                if item.markup.PLAYER1.team is item.markup.PORTAL1.team and not impossibleEvents[item._id]?
                     records.push
                         time:    item.time
                         player:  item.markup.PLAYER1
@@ -97,7 +113,7 @@ get_portal_history = (req, res) ->
                 
                 if lastDestroyEvent?
                     if lastDestroyEvent.markup.PORTAL1.team isnt item.markup.PORTAL1.team and (lastCaptureEvent is null or lastCaptureEvent.time > lastDestroyEvent.time)
-                        if lastDestroyEvent.markup.PLAYER1.team isnt lastDestroyEvent.markup.PORTAL1.team
+                        if lastDestroyEvent.markup.PLAYER1.team isnt lastDestroyEvent.markup.PORTAL1.team and not impossibleEvents[lastDestroyEvent._id]?
                             records.push
                                 time:    lastDestroyEvent.time
                                 player:  lastDestroyEvent.markup.PLAYER1
