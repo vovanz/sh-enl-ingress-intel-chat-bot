@@ -60,6 +60,8 @@ FactionListener = GLOBAL.FactionListener =
 
 parseData = (callback) ->
 
+    return callback() if argv.chat is 'false'
+
     storage.lastParsedTime = Date.now() - Config.Faction.MaxParseTimespan if storage.lastParsedTime is null
     
     Database.db.collection('Chat.Faction').find({time: {$gte: storage.lastParsedTime}}).sort {time: 1}, (err, cursor) ->
