@@ -85,24 +85,27 @@ class RequestFactory
         for cookie in Config.Auth.CookieRaw.split(';')
             cookie = cookie.trim()
             if cookie.length isnt 0
-                @cookieJar.setCookie request.cookie(cookie), 'http://www.ingress.com'
+                @cookieJar.setCookie request.cookie(cookie), 'https://www.ingress.com'
 
     generate: (options) =>
 
-        activeMunge = Munges.Data[Munges.ActiveSet]
-        normalizeFunc = Munges.NormalizeParamCount.func
+        #activeMunge = Munges.Data[Munges.ActiveSet]
+        #normalizeFunc = Munges.NormalizeParamCount.func
 
-        methodName = 'dashboard_' + options.action
-        versionStr = 'version_parameter'
+        #methodName = 'dashboard_' + options.action
+        #versionStr = 'version_parameter'
 
-        methodName = activeMunge[methodName]
-        versionStr = activeMunge[versionStr]
+        #methodName = activeMunge[methodName]
+        #versionStr = activeMunge[versionStr]
 
-        post_data = Utils.requestDataMunge Utils.extend({method: methodName, version: versionStr}, options.data), activeMunge, normalizeFunc
+        #post_data = Utils.requestDataMunge Utils.extend({method: methodName, version: versionStr}, options.data), activeMunge, normalizeFunc
+
+        post_data = Utils.extend({v: Munges.Data[Munges.ActiveSet].version}, options.data)
 
         # return:
         return {
-            m:        methodName
+            #m:        methodName
+            m:        options.action
             d:        post_data
             before:   options.beforeRequest || (callback) -> callback()
             success:  options.onSuccess     || (body, callback) -> callback()
@@ -126,7 +129,7 @@ class RequestFactory
 
         delayedRequest.post
 
-            url:        'http://www.ingress.com' + url
+            url:        'https://www.ingress.com' + url
             body:       JSON.stringify data
             jar:        @cookieJar
             maxSockets: 50
@@ -136,8 +139,8 @@ class RequestFactory
                 'Accept': 'application/json, text/javascript, */*; q=0.01'
                 'Accept-Encoding': 'gzip,deflate'
                 'Content-type': 'application/json; charset=utf-8'
-                'Origin': 'http://www.ingress.com'
-                'Referer': 'http://www.ingress.com/intel'
+                'Origin': 'https://www.ingress.com'
+                'Referer': 'https://www.ingress.com/intel'
                 'User-Agent': Config.Request.UserAgent
                 'X-CSRFToken': @cookies.csrftoken
 
@@ -147,7 +150,7 @@ class RequestFactory
 
         delayedRequest.get
 
-            url:        'http://www.ingress.com' + url
+            url:        'https://www.ingress.com' + url
             jar:        @cookieJar
             maxSockets: 50
             encoding:   null
@@ -156,8 +159,8 @@ class RequestFactory
                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
                 'Accept-Encoding': 'gzip,deflate'
                 'Cache-Control': 'max-age=0'
-                'Origin': 'http://www.ingress.com'
-                'Referer': 'http://www.ingress.com/intel'
+                'Origin': 'https://www.ingress.com'
+                'Referer': 'https://www.ingress.com/intel'
                 'User-Agent': Config.Request.UserAgent
 
         , @_gzipDecode callback

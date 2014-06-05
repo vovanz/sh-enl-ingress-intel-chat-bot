@@ -173,10 +173,10 @@ FactionUtil = GLOBAL.FactionUtil =
         message = message.toString()
 
         data =
-            messageSendPlext: message
-            latE6SendPlext: Math.round(lat * 1e6)
-            lngE6SendPlext: Math.round(lng * 1e6)
-            chatTabSendPlext: 'faction'
+            message: message
+            latE6:   Math.round(lat * 1e6)
+            lngE6:   Math.round(lng * 1e6)
+            tab:     'faction'
 
         request.push
 

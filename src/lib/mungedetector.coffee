@@ -2,15 +2,15 @@ async = require 'async'
 requestFactory = require LIB_DIR + '/requestfactory.js'
 request = requestFactory()
 
-NemesisMethodName = null
-
 Munges = GLOBAL.Munges =
     Failed:    false
     Data:      null
     ActiveSet: 0
+###
     NormalizeParamCount:
         func: (a) -> a
         body: 'function(a){return a;}'
+###
 
 MungeDetector = GLOBAL.MungeDetector = 
     
@@ -47,8 +47,8 @@ MungeDetector = GLOBAL.MungeDetector =
                     if record?
                         Munges.Data = record.data
                         Munges.ActiveSet = record.index
-                        Munges.NormalizeParamCount.body = record.func
-                        Munges.NormalizeParamCount.func = Utils.createNormalizeFunction(record.func)
+                        #Munges.NormalizeParamCount.body = record.func
+                        #Munges.NormalizeParamCount.func = Utils.createNormalizeFunction(record.func)
 
                     callback()
 
@@ -103,7 +103,7 @@ MungeDetector = GLOBAL.MungeDetector =
                         $set:
                             data:  Munges.Data
                             index: Munges.ActiveSet
-                            func:  Munges.NormalizeParamCount.body
+                            #func:  Munges.NormalizeParamCount.body
                     , {upsert: true}
                     , (err) ->
                         
@@ -165,7 +165,6 @@ extractMunge = (callback) ->
             maps:
                 OverlayView: ->
                     null
-
         try
             eval body + ';export_obj.nemesis = nemesis;'
             result = Utils.extractMungeFromStock export_obj.nemesis
@@ -175,8 +174,8 @@ extractMunge = (callback) ->
 
         Munges.Data      = [result]
         Munges.ActiveSet = 0
-        Munges.NormalizeParamCount.body = Utils.extractNormalizeFunction export_obj.nemesis
-        Munges.NormalizeParamCount.func = Utils.createNormalizeFunction Munges.NormalizeParamCount.body
+        #Munges.NormalizeParamCount.body = Utils.extractNormalizeFunction export_obj.nemesis
+        #Munges.NormalizeParamCount.func = Utils.createNormalizeFunction Munges.NormalizeParamCount.body
 
         # test it
         tryMungeSet (err) ->
